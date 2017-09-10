@@ -1,0 +1,32 @@
+server {
+    listen 80;
+    server_name code.flowing.systems;
+    rewrite ^/$ https://github.com/FlowingSystems permanent;
+}
+
+server {
+    listen 80;
+
+    server_name ~^(?<domain>.+)\.flowing\.systems$;
+
+    root /var/www/code/$domain;
+    sendfile on;
+    sendfile_max_chunk 1m;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+
+    location =/latest {
+        rewrite ^/latest$ /$domain.jar permanent;
+    }
+
+    location =/$domain.jar {
+        
+    }
+
+    location /v {
+        
+    }
+
+    rewrite ^/$ https://github.com/FlowingSystems/$domain permanent;
+}
